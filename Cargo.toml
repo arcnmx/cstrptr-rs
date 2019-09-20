@@ -1,0 +1,25 @@
+[package]
+name = "cstrptr"
+version = "0.1.0" # keep in sync with html_root_url
+authors = ["arc"]
+edition = "2018"
+
+description = "FFI-compatible and no-std &'a CStr"
+documentation = "https://docs.rs/cstrptr/"
+repository = "https://github.com/arcnmx/cstrptr-rs"
+keywords = ["cstr", "cstring", "no-std"]
+categories = ["no-std", "development-tools::ffi"]
+license = "MIT"
+
+[package.metadata.docs.rs]
+features = ["std", "unstable"]
+
+[dependencies]
+cty = "^0.2.0"
+memchr = { version = "^2.2.1", default-features = false, optional = true }
+
+[features]
+default = ["memchr"]
+std = []
+alloc = []
+unstable = []
