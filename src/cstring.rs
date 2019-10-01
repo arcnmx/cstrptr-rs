@@ -24,7 +24,7 @@ impl CString {
         let bytes = bytes.into();
         match CStr::from_bytes_with_nul(&bytes) {
             Ok(_) => Ok(unsafe { Self::from_bytes_with_nul_unchecked(bytes) }),
-            Err(e) => Err(bytes), // TODO: NulError
+            Err(_) => Err(bytes), // TODO: NulError
         }
     }
 
