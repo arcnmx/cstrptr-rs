@@ -4,7 +4,7 @@ version = "0.1.0" # keep in sync with html_root_url
 authors = ["arc"]
 edition = "2018"
 
-description = "FFI-compatible and no-std &'a CStr"
+description = "FFI-compatible and no-std &CStr"
 documentation = "https://docs.rs/cstrptr/"
 repository = "https://github.com/arcnmx/cstrptr-rs"
 keywords = ["cstr", "cstring", "no-std"]
