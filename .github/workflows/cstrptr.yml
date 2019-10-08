@@ -1,0 +1,2485 @@
+env:
+  CI_ALLOW_ROOT: '1'
+  CI_CONFIG: ./ci.nix
+  CI_PLATFORM: gh-actions
+jobs:
+  beta:
+    name: cstrptr-beta
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  beta-alloc:
+    name: cstrptr-beta-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  beta-alloc-memchr:
+    name: cstrptr-beta-alloc-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-alloc-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  beta-memchr:
+    name: cstrptr-beta-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  beta-memchr-alloc:
+    name: cstrptr-beta-memchr-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  beta-memchr-std:
+    name: cstrptr-beta-memchr-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-memchr-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  beta-std:
+    name: cstrptr-beta-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  beta-std-memchr:
+    name: cstrptr-beta-std-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.beta-std-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  ci-check:
+    name: cstrptr check
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-action-build
+      name: nix build ci.gh-actions.configFile
+      uses: arcnmx/ci/actions/nix/build@master
+      with:
+        attrs: ci.gh-actions.configFile
+        out-link: .ci/workflow.yml
+    - id: ci-action-compare
+      name: gh-actions compare
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        args: -u .github/workflows/cstrptr.yml .ci/workflow.yml
+        attrs: nixpkgs.diffutils
+        command: diff
+  nightly:
+    name: cstrptr-nightly
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-alloc:
+    name: cstrptr-nightly-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-alloc-memchr:
+    name: cstrptr-nightly-alloc-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-alloc-memchr-unstable:
+    name: cstrptr-nightly-alloc-memchr-unstable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr-unstable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr-unstable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr-unstable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr-unstable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-memchr-unstable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-alloc-unstable:
+    name: cstrptr-nightly-alloc-unstable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-alloc-unstable-memchr:
+    name: cstrptr-nightly-alloc-unstable-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-alloc-unstable-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-memchr:
+    name: cstrptr-nightly-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-memchr-alloc:
+    name: cstrptr-nightly-memchr-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-memchr-alloc-unstable:
+    name: cstrptr-nightly-memchr-alloc-unstable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc-unstable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc-unstable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc-unstable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc-unstable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-alloc-unstable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-memchr-std:
+    name: cstrptr-nightly-memchr-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-memchr-std-unstable:
+    name: cstrptr-nightly-memchr-std-unstable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std-unstable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std-unstable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std-unstable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std-unstable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-std-unstable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-memchr-unstable:
+    name: cstrptr-nightly-memchr-unstable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-memchr-unstable-alloc:
+    name: cstrptr-nightly-memchr-unstable-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-memchr-unstable-std:
+    name: cstrptr-nightly-memchr-unstable-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-memchr-unstable-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-std:
+    name: cstrptr-nightly-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-std-memchr:
+    name: cstrptr-nightly-std-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-std-memchr-unstable:
+    name: cstrptr-nightly-std-memchr-unstable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr-unstable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr-unstable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr-unstable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr-unstable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-memchr-unstable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-std-unstable:
+    name: cstrptr-nightly-std-unstable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-std-unstable-memchr:
+    name: cstrptr-nightly-std-unstable-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-std-unstable-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-unstable:
+    name: cstrptr-nightly-unstable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-unstable-alloc:
+    name: cstrptr-nightly-unstable-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-unstable-alloc-memchr:
+    name: cstrptr-nightly-unstable-alloc-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-alloc-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-unstable-memchr:
+    name: cstrptr-nightly-unstable-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-unstable-memchr-alloc:
+    name: cstrptr-nightly-unstable-memchr-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-unstable-memchr-std:
+    name: cstrptr-nightly-unstable-memchr-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-memchr-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-unstable-std:
+    name: cstrptr-nightly-unstable-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  nightly-unstable-std-memchr:
+    name: cstrptr-nightly-unstable-std-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.nightly-unstable-std-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  stable:
+    name: cstrptr-stable
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  stable-alloc:
+    name: cstrptr-stable-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  stable-alloc-memchr:
+    name: cstrptr-stable-alloc-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-alloc-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  stable-memchr:
+    name: cstrptr-stable-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  stable-memchr-alloc:
+    name: cstrptr-stable-memchr-alloc
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-alloc.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-alloc.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-alloc.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-alloc.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-alloc.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  stable-memchr-std:
+    name: cstrptr-stable-memchr-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-memchr-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  stable-std:
+    name: cstrptr-stable-std
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+  stable-std-memchr:
+    name: cstrptr-stable-std-memchr
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout
+      name: git clone
+      uses: actions/checkout@v1
+      with:
+        submodules: true
+    - id: nix-install
+      name: nix install
+      uses: arcnmx/ci/actions/nix/install@master
+    - id: ci-setup
+      name: nix setup
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std-memchr.run.setup
+        quiet: false
+    - id: ci-dirty
+      name: nix test dirty
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std-memchr.run.test
+        command: ci-build-dirty
+        quiet: false
+        stdout: ${{ runner.temp }}/ci.build.dirty
+    - id: ci-test
+      name: nix test build
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std-memchr.run.test
+        command: ci-build-realise
+        ignore-exit-code: true
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+    - env:
+        CI_EXIT_CODE: ${{ steps.ci-test.outputs.exit-code }}
+      id: ci-summary
+      name: nix test results
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std-memchr.run.test
+        command: ci-build-summarise
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.dirty
+        stdout: ${{ runner.temp }}/ci.build.cache
+    - env:
+        CACHIX_SIGNING_KEY: ${{ secrets.CACHIX_SIGNING_KEY }}
+      id: ci-cache
+      if: always()
+      name: nix test cache
+      uses: arcnmx/ci/actions/nix/run@master
+      with:
+        attrs: ci.job.stable-std-memchr.run.test
+        command: ci-build-cache
+        quiet: false
+        stdin: ${{ runner.temp }}/ci.build.cache
+name: cstrptr
+'on':
+- push
+- pull_request
