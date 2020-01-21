@@ -29,7 +29,7 @@ impl CStr {
     #[inline]
     pub unsafe fn from_ptr<'a>(ptr: *const c_char) -> &'a Self {
         let len = sys::strlen(ptr);
-        Self::from_bytes_with_nul_unchecked(core::slice::from_raw_parts(ptr as *const _, len))
+        Self::from_bytes_with_nul_unchecked(core::slice::from_raw_parts(ptr as *const _, len + 1))
     }
 
     pub fn from_bytes_with_nul(bytes: &[u8]) -> Result<&Self, FromBytesWithNulError> {
