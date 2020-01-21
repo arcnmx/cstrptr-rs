@@ -1,6 +1,6 @@
 [package]
 name = "cstrptr"
-version = "0.1.0" # keep in sync with html_root_url
+version = "0.1.1" # keep in sync with html_root_url
 authors = ["arc"]
 edition = "2018"
 

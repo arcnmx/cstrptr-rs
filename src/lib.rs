@@ -1,5 +1,5 @@
 //#![deny(missing_docs)]
-#![doc(html_root_url = "http://docs.rs/cstrptr/0.1.0")]
+#![doc(html_root_url = "http://docs.rs/cstrptr/0.1.1")]
 #![cfg_attr(feature = "unstable", feature(const_raw_ptr_deref, const_fn))]
 #![cfg_attr(not(feature = "std"), no_std)]
 
