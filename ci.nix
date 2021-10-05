@@ -19,7 +19,7 @@ in {
   ci.gh-actions.enable = true;
   cache.cachix.arc.enable = true;
   channels = {
-    nixpkgs = "19.09";
+    nixpkgs = "21.05";
     rust = "master";
   };
   tasks.test.inputs = {
