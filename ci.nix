@@ -11,6 +11,9 @@
     impure = true;
     environment = [ "CARGO_TARGET_DIR" ];
     command = ''
+      if [[ -z $CARGO_TARGET_DIR ]]; then
+        CARGO_TARGET_DIR=$PWD/target
+      fi
       ${config.cstrptr.rustPlatform.cargo}/bin/${command} --features "${concatStringsSep "," config.cstrptr.features}" --no-default-features
     '';
   };
