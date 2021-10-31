@@ -66,7 +66,7 @@ impl CStr {
     }
 
     #[inline]
-    fn as_bytes(&self) -> &[u8] {
+    pub fn as_bytes(&self) -> &[u8] {
         // TODO: someday make this const?
         let bytes = self.as_bytes_with_nul();
         let len = bytes.len() - 1;
