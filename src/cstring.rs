@@ -5,7 +5,7 @@ use alloc::string::String;
 use cty::c_char;
 use crate::{ CStr, CStrPtr };
 
-#[derive(Clone)]
+#[derive(Default, Clone)]
 pub struct CString {
     inner: Box<[u8]>,
 }
@@ -122,6 +122,14 @@ impl alloc::borrow::ToOwned for CStr {
 impl alloc::borrow::Borrow<CStr> for CString {
     #[inline]
     fn borrow(&self) -> &CStr {
+        self.as_c_str()
+    }
+}
+
+impl ops::Deref for CString {
+    type Target = CStr;
+
+    fn deref(&self) -> &CStr {
         self.as_c_str()
     }
 }
