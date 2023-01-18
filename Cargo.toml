@@ -11,12 +11,21 @@ keywords = ["cstr", "cstring", "no-std"]
 categories = ["no-std", "development-tools::ffi"]
 license = "MIT"
 
+include = [
+	"/src/**",
+	"/README*",
+	"/COPYING*",
+]
+
 [package.metadata.docs.rs]
 features = ["std", "unstable"]
 
+[badges]
+maintenance = { status = "passively-maintained" }
+
 [dependencies]
-cty = "^0.2.0"
-memchr = { version = "^2.2.1", default-features = false, optional = true }
+cty = "0.2"
+memchr = { version = "2.2", default-features = false, optional = true }
 
 [features]
 default = ["memchr"]
