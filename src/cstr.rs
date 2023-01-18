@@ -1,4 +1,5 @@
 use core::cmp::Ordering;
+use core::fmt;
 use core::hint;
 use cty::c_char;
 
@@ -6,6 +7,7 @@ pub struct CStr {
     inner: [c_char],
 }
 
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub enum FromBytesWithNulError {
     InteriorNul {
         position: usize,
@@ -24,6 +26,20 @@ impl FromBytesWithNulError {
         FromBytesWithNulError::NotNulTerminated
     }
 }
+
+impl fmt::Display for FromBytesWithNulError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            FromBytesWithNulError::InteriorNul { position } =>
+                write!(f, "data provided contains an interior nul byte at byte pos {}", position),
+            FromBytesWithNulError::NotNulTerminated =>
+                f.write_str("data provided is not nul terminated"),
+        }
+    }
+}
+
+#[cfg(feature = "std")]
+impl std::error::Error for FromBytesWithNulError { }
 
 impl CStr {
     #[inline]
@@ -152,6 +168,18 @@ impl AsRef<CStr> for CStr {
     #[inline]
     fn as_ref(&self) -> &Self {
         self
+    }
+}
+
+impl<'a> Default for &'a CStr {
+    fn default() -> Self {
+        unsafe { CStr::from_bytes_with_nul_unchecked(&[0]) }
+    }
+}
+
+impl fmt::Debug for CStr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "\"{}\"", self.to_bytes().escape_ascii())
     }
 }
 
