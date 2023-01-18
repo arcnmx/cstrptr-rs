@@ -1,11 +1,12 @@
-use core::marker::PhantomData;
-use cty::c_char;
-use crate::{ CStr, FromBytesWithNulError };
-
 #[cfg(all(not(feature = "std"), feature = "alloc"))]
 use alloc::borrow::Cow;
 #[cfg(feature = "std")]
 use std::borrow::Cow;
+use {
+    crate::{CStr, FromBytesWithNulError},
+    core::marker::PhantomData,
+    cty::c_char,
+};
 
 #[repr(transparent)]
 #[derive(Copy, Clone)]
@@ -17,9 +18,7 @@ pub struct CStrPtr<'a> {
 impl<'a> CStrPtr<'a> {
     #[inline]
     pub const fn from_c_str(str: &'a CStr) -> Self {
-        unsafe {
-            Self::from_ptr(str.as_ptr())
-        }
+        unsafe { Self::from_ptr(str.as_ptr()) }
     }
 
     #[inline]
@@ -56,9 +55,7 @@ impl<'a> CStrPtr<'a> {
 
     #[inline]
     pub fn to_c_str(self) -> &'a CStr {
-        unsafe {
-            CStr::from_ptr(self.inner)
-        }
+        unsafe { CStr::from_ptr(self.inner) }
     }
 
     #[inline]

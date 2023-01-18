@@ -1,7 +1,7 @@
-use core::cmp::Ordering;
-use core::fmt;
-use core::hint;
-use cty::c_char;
+use {
+    core::{cmp::Ordering, fmt, hint},
+    cty::c_char,
+};
 
 pub struct CStr {
     inner: [c_char],
@@ -9,17 +9,13 @@ pub struct CStr {
 
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum FromBytesWithNulError {
-    InteriorNul {
-        position: usize,
-    },
+    InteriorNul { position: usize },
     NotNulTerminated,
 }
 
 impl FromBytesWithNulError {
     fn interior_nul(position: usize) -> Self {
-        FromBytesWithNulError::InteriorNul {
-            position
-        }
+        FromBytesWithNulError::InteriorNul { position }
     }
 
     fn not_nul_terminated() -> Self {
@@ -30,16 +26,18 @@ impl FromBytesWithNulError {
 impl fmt::Display for FromBytesWithNulError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            FromBytesWithNulError::InteriorNul { position } =>
-                write!(f, "data provided contains an interior nul byte at byte pos {}", position),
-            FromBytesWithNulError::NotNulTerminated =>
-                f.write_str("data provided is not nul terminated"),
+            FromBytesWithNulError::InteriorNul { position } => write!(
+                f,
+                "data provided contains an interior nul byte at byte pos {}",
+                position
+            ),
+            FromBytesWithNulError::NotNulTerminated => f.write_str("data provided is not nul terminated"),
         }
     }
 }
 
 #[cfg(feature = "std")]
-impl std::error::Error for FromBytesWithNulError { }
+impl std::error::Error for FromBytesWithNulError {}
 
 impl CStr {
     #[inline]
@@ -50,11 +48,12 @@ impl CStr {
 
     pub fn from_bytes_with_nul(bytes: &[u8]) -> Result<&Self, FromBytesWithNulError> {
         match memchr(0, bytes) {
-            Some(nul_pos) => if nul_pos + 1 != bytes.len() {
-                Err(FromBytesWithNulError::interior_nul(nul_pos))
-            } else {
-                Ok(unsafe { Self::from_bytes_with_nul_unchecked(bytes) })
-            },
+            Some(nul_pos) =>
+                if nul_pos + 1 != bytes.len() {
+                    Err(FromBytesWithNulError::interior_nul(nul_pos))
+                } else {
+                    Ok(unsafe { Self::from_bytes_with_nul_unchecked(bytes) })
+                },
             None => Err(FromBytesWithNulError::not_nul_terminated()),
         }
     }

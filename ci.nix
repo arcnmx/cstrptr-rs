@@ -12,6 +12,7 @@ in {
       nixpkgs = "22.11";
     };
     tasks = {
+      rustfmt.inputs = singleton checks.rustfmt;
       version.inputs = singleton checks.version;
       build.inputs = singleton (checks.test.override {
         inherit (config.cstrptr) rustPlatform features;

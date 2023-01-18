@@ -46,6 +46,10 @@
       default = { outputs'devShells }: outputs'devShells.plain;
     };
     checks = {
+      rustfmt = { rust'builders, source }: rust'builders.check-rustfmt-unstable {
+        src = source;
+        config = ./.rustfmt.toml;
+      };
       version = { rust'builders, source }: rust'builders.check-contents {
         src = source;
         patterns = [

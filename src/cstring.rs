@@ -1,9 +1,9 @@
-use core::ops;
-use alloc::boxed::Box;
-use alloc::vec::Vec;
-use alloc::string::String;
-use cty::c_char;
-use crate::{ CStr, CStrPtr };
+use {
+    crate::{CStr, CStrPtr},
+    alloc::{boxed::Box, string::String, vec::Vec},
+    core::ops,
+    cty::c_char,
+};
 
 #[derive(Default, Clone)]
 pub struct CString {
@@ -42,7 +42,9 @@ impl CString {
     pub unsafe fn from_raw(ptr: *mut c_char) -> Self {
         let len = CStr::from_ptr(ptr).to_bytes_with_nul().len();
         let slice = core::slice::from_raw_parts_mut(ptr, len);
-        Self { inner: Box::from_raw(slice as *mut [_] as *mut [u8]) }
+        Self {
+            inner: Box::from_raw(slice as *mut [_] as *mut [u8]),
+        }
     }
 
     #[inline]
@@ -53,8 +55,7 @@ impl CString {
     pub fn into_string(self) -> Result<String, Self> {
         String::from_utf8(self.into_bytes()).map_err(|e|
             // TODO: custom error type
-            unsafe { Self::from_vec_unchecked(e.into_bytes()) }
-        )
+            unsafe { Self::from_vec_unchecked(e.into_bytes()) })
     }
 
     pub fn into_bytes(self) -> Vec<u8> {
@@ -92,7 +93,9 @@ impl ops::Index<ops::RangeFull> for CString {
 impl From<&CStr> for CString {
     #[inline]
     fn from(s: &CStr) -> Self {
-        Self { inner: s.to_bytes_with_nul().into() }
+        Self {
+            inner: s.to_bytes_with_nul().into(),
+        }
     }
 }
 
@@ -115,7 +118,9 @@ impl alloc::borrow::ToOwned for CStr {
 
     #[inline]
     fn to_owned(&self) -> Self::Owned {
-        CString { inner: self.to_bytes_with_nul().into() }
+        CString {
+            inner: self.to_bytes_with_nul().into(),
+        }
     }
 }
 
